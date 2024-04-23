@@ -3,7 +3,7 @@ import Board from "./components/Board.jsx";
 import Header from "./components/Header.jsx";
 import Menu from "./components/Menu.jsx";
 import Footer from "./components/Footer.jsx";
-import GameContextProvider, { GameContext } from "./store/game-context.jsx";
+import GameContextProvider from "./store/game-context.jsx";
 
 function App() {
   return (
