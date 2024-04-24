@@ -11,7 +11,7 @@ export const GameContext = createContext({
   changeDifficulty: () => {},
   resetBoard: () => {},
   flipCard: () => {},
-  checkPair: () => {},
+  unflipWrongPair: () => {},
 });
 
 function gameReducer(state, action) {
@@ -70,23 +70,24 @@ function gameReducer(state, action) {
     const { id, value } = action.payload;
     if (state.history.length === 1) {
       const cardA = state.history[0];
-      const cardB = action.payload;
+      const cardB = { id, value };
       if (cardA.value === cardB.value) {
-        const isWin = checkBoardForWin(state.board);
+        const newBoard = state.board.map((card) => {
+          if (card.id === id) {
+            return {
+              id: card.id,
+              value: card.value,
+              visible: !card.visible,
+            };
+          } else {
+            return card;
+          }
+        });
+        const isWin = checkBoardForWin(newBoard);
         if (isWin) {
           return {
             ...state,
-            board: state.board.map((card) => {
-              if (card.id === id) {
-                return {
-                  id: card.id,
-                  value: card.value,
-                  visible: !card.visible,
-                };
-              } else {
-                return card;
-              }
-            }),
+            board: newBoard,
             isRunning: 3,
             history: [],
           };
@@ -181,7 +182,7 @@ export default function GameContextProvider({ children }) {
     });
   }
 
-  function handlePairCheck() {
+  function handleUnflipWrongPair() {
     setGameDispatch({
       type: "UNFLIP_WRONG_PAIR",
     });
@@ -210,7 +211,7 @@ export default function GameContextProvider({ children }) {
     changeDifficulty: handleChangeGameDifficulty,
     resetBoard: handleResetBoard,
     flipCard: handleFlipCard,
-    checkPair: handlePairCheck,
+    unflipWrongPair: handleUnflipWrongPair,
   };
 
   return (

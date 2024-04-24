@@ -3,7 +3,7 @@ import { GameContext } from "../store/game-context";
 import Card from "./Card.jsx";
 
 export default function Board({}) {
-  const { history, board, difficulty, checkPair } = useContext(GameContext);
+  const { history, board, difficulty, unflipWrongPair } = useContext(GameContext);
   const lockButtons = history.length >= 2;
   var boardClass =
     "grid md:gap-2 mt-4 p-2 md:p-8 bg-orange-300 border-orange-800 border-2 shadow-md rounded-xl";
@@ -18,8 +18,9 @@ export default function Board({}) {
     boardClass += " grid-cols-4 md:grid-cols-6";
   }
 
+  console.log(history);
   if (history.length >= 2) {
-    setTimeout(() => checkPair(), 1000);
+    setTimeout(() => unflipWrongPair(), 1000);
   }
 
   return (
