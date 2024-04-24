@@ -2,10 +2,13 @@ import { useContext } from "react";
 import Button from "./Button.jsx";
 import { GameContext } from "../store/game-context.jsx";
 
+const victoryMessages = ["PRETTY NICE!", "VERY GOOD!", "GREAT!", "AWESOME!", "WAY TO GO!"];
+
 export default function Menu() {
   const { mistakes, isRunning, difficulty, changeDifficulty, resetBoard } =
     useContext(GameContext);
   const score = 100 / 1.02 ** mistakes;
+  const victoryMessage = victoryMessages.at(Math.floor(Math.random() * victoryMessages.length));
 
   return (
     <section className="mt-8">
@@ -58,7 +61,7 @@ export default function Menu() {
       )}
       {isRunning === 3 && (
         <h1 className="mt-4 font-bold text-stone-50 text-lg md:text-2xl">
-          <span className="animate-pulse">YOU WIN!</span>{" "}
+          <span className="animate-pulse">{victoryMessage}</span>{" "}
           <div className="mt-2">
             <span className="px-2 py-1 rounded-xl bg-green-600">
               Score: {score.toFixed(2)}
