@@ -9,7 +9,7 @@ export default function Menu() {
 
   return (
     <section className="mt-8">
-      <div className="flex justify-center gap-4">
+      <div className="flex justify-center gap-2 md:gap-4">
         <Button
           type="easy"
           onClick={() => {
@@ -57,7 +57,7 @@ export default function Menu() {
         </h1>
       )}
       {isRunning === 3 && (
-        <h1 className="mt-4 font-bold text-stone-50 text-2xl">
+        <h1 className="mt-4 font-bold text-stone-50 text-lg md:text-2xl">
           <span className="animate-pulse">YOU WIN!</span>{" "}
           <div className="mt-2">
             <span className="px-2 py-1 rounded-xl bg-green-600">

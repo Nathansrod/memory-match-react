@@ -6,16 +6,16 @@ export default function Board({}) {
   const { history, board, difficulty, checkPair } = useContext(GameContext);
   const lockButtons = history.length >= 2;
   var boardClass =
-    "grid gap-2 mt-4 p-8 w-fit bg-orange-300 border-orange-800 border-2 shadow-md rounded-xl";
+    "grid md:gap-2 mt-4 p-2 md:p-8 bg-orange-300 border-orange-800 border-2 shadow-md rounded-xl";
 
   if (difficulty === "easy") {
-    boardClass += " grid-cols-4";
+    boardClass += " grid-cols-3 md:grid-cols-4";
   }
   if (difficulty === "medium") {
-    boardClass += " grid-cols-5";
+    boardClass += " grid-cols-4 md:grid-cols-5";
   }
   if (difficulty === "hard") {
-    boardClass += " grid-cols-6";
+    boardClass += " grid-cols-4 md:grid-cols-6";
   }
 
   if (history.length >= 2) {
@@ -23,7 +23,7 @@ export default function Board({}) {
   }
 
   return (
-    <section className="flex justify-center relative">
+    <section className="flex justify-center">
       <div className={boardClass}>
         {board.map((card) => (
           <Card key={card.id} card={card} lock={lockButtons}/>

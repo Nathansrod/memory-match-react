@@ -68,6 +68,46 @@ function gameReducer(state, action) {
 
   if (action.type === "FLIP_CARD") {
     const { id, value } = action.payload;
+    if (state.history.length === 1) {
+      const cardA = state.history[0];
+      const cardB = action.payload;
+      if (cardA.value === cardB.value) {
+        const isWin = checkBoardForWin(state.board);
+        if (isWin) {
+          return {
+            ...state,
+            board: state.board.map((card) => {
+              if (card.id === id) {
+                return {
+                  id: card.id,
+                  value: card.value,
+                  visible: !card.visible,
+                };
+              } else {
+                return card;
+              }
+            }),
+            isRunning: 3,
+            history: [],
+          };
+        }
+        return {
+          ...state,
+          board: state.board.map((card) => {
+            if (card.id === id) {
+              return {
+                id: card.id,
+                value: card.value,
+                visible: !card.visible,
+              };
+            } else {
+              return card;
+            }
+          }),
+          history: [],
+        };
+      }
+    }
     return {
       ...state,
       history: [...state.history, { id, value }],
@@ -85,44 +125,27 @@ function gameReducer(state, action) {
     };
   }
 
-  if (action.type === "CHECK_PAIR") {
+  if (action.type === "UNFLIP_WRONG_PAIR") {
     if (state.history.length === 2) {
       const cardA = state.history[0];
       const cardB = state.history[1];
-      if (cardA.value === cardB.value) {
-        // Pair match
-        const isWin = checkBoardForWin(state.board);
-        if (isWin) {
+      const newBoard = state.board.map((card) => {
+        if (card.id === cardA.id || card.id === cardB.id) {
           return {
-            ...state,
-            isRunning: 3,
-            history: [],
+            id: card.id,
+            value: card.value,
+            visible: !card.visible,
           };
+        } else {
+          return card;
         }
-        return {
-          ...state,
-          history: [],
-        };
-      } else {
-        // Pair don't match
-        const newBoard = state.board.map((card) => {
-          if (card.id === cardA.id || card.id === cardB.id) {
-            return {
-              id: card.id,
-              value: card.value,
-              visible: !card.visible,
-            };
-          } else {
-            return card;
-          }
-        });
-        return {
-          ...state,
-          history: [],
-          board: newBoard,
-          mistakes: state.mistakes + 1,
-        };
-      }
+      });
+      return {
+        ...state,
+        history: [],
+        board: newBoard,
+        mistakes: state.mistakes + 1,
+      };
     }
   }
 
@@ -160,7 +183,7 @@ export default function GameContextProvider({ children }) {
 
   function handlePairCheck() {
     setGameDispatch({
-      type: "CHECK_PAIR",
+      type: "UNFLIP_WRONG_PAIR",
     });
   }
 
