@@ -18,7 +18,6 @@ export default function Board({}) {
     boardClass += " grid-cols-4 md:grid-cols-6";
   }
 
-  console.log(history);
   if (history.length >= 2) {
     setTimeout(() => unflipWrongPair(), 1000);
   }
