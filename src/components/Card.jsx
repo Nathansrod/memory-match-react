@@ -2,7 +2,7 @@ import { useContext } from "react";
 import { GameContext } from "../store/game-context";
 import { imgPaths } from "../gameUtils";
 
-export default function Card({card, disable}) {
+export default function Card({card, lock}) {
     const {value, visible} = card;
     const {isRunning, difficulty, flipCard, startGame} = useContext(GameContext);
     const img = imgPaths[value];
@@ -17,9 +17,9 @@ export default function Card({card, disable}) {
     if (difficulty == "hard") {
         cardSizeClass += " w-20 h-20";
     }
-
+    
     function handleCardClick() {
-        if (!visible && !disable && isRunning) {
+        if (!lock && !visible && isRunning) {
             flipCard(card);
         }
         if (!isRunning) {

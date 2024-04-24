@@ -11,6 +11,7 @@ export const GameContext = createContext({
   changeDifficulty: () => {},
   resetBoard: () => {},
   flipCard: () => {},
+  checkPair: () => {},
 });
 
 function gameReducer(state, action) {
@@ -67,30 +68,29 @@ function gameReducer(state, action) {
 
   if (action.type === "FLIP_CARD") {
     const { id, value } = action.payload;
-    if (state.history.length < 2) {
-      return {
-        ...state,
-        history: [...state.history, { id, value }],
-        board: state.board.map((card) => {
-          if (card.id === id) {
-            return {
-              id: card.id,
-              value: card.value,
-              visible: !card.visible,
-            };
-          } else {
-            return card;
-          }
-        }),
-      };
-    }
+    return {
+      ...state,
+      history: [...state.history, { id, value }],
+      board: state.board.map((card) => {
+        if (card.id === id) {
+          return {
+            id: card.id,
+            value: card.value,
+            visible: !card.visible,
+          };
+        } else {
+          return card;
+        }
+      }),
+    };
   }
 
   if (action.type === "CHECK_PAIR") {
     if (state.history.length === 2) {
       const cardA = state.history[0];
       const cardB = state.history[1];
-      if (cardA.value === cardB.value) {  // Pair match
+      if (cardA.value === cardB.value) {
+        // Pair match
         const isWin = checkBoardForWin(state.board);
         if (isWin) {
           return {
@@ -103,7 +103,8 @@ function gameReducer(state, action) {
           ...state,
           history: [],
         };
-      } else {  // Pair don't match
+      } else {
+        // Pair don't match
         const newBoard = state.board.map((card) => {
           if (card.id === cardA.id || card.id === cardB.id) {
             return {
@@ -119,7 +120,7 @@ function gameReducer(state, action) {
           ...state,
           history: [],
           board: newBoard,
-          mistakes: state.mistakes+1,
+          mistakes: state.mistakes + 1,
         };
       }
     }
@@ -155,14 +156,12 @@ export default function GameContextProvider({ children }) {
       type: "FLIP_CARD",
       payload: card,
     });
-    setTimeout(
-      () =>
-        setGameDispatch({
-          type: "CHECK_PAIR",
-          payload: card,
-        }),
-      1000
-    );
+  }
+
+  function handlePairCheck() {
+    setGameDispatch({
+      type: "CHECK_PAIR",
+    });
   }
 
   function handleGameStart() {
@@ -188,6 +187,7 @@ export default function GameContextProvider({ children }) {
     changeDifficulty: handleChangeGameDifficulty,
     resetBoard: handleResetBoard,
     flipCard: handleFlipCard,
+    checkPair: handlePairCheck,
   };
 
   return (
